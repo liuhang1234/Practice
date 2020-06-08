@@ -1,27 +1,20 @@
 package com.lh.myapplication;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.util.Consumer;
-import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.ViewGroup;
+import android.util.Log;
 
 import com.lh.myapplication.http.BaseResponse;
 import com.lh.myapplication.http.RetrofitClient;
 import com.lh.myapplication.http.TokenBean;
 import com.lh.myapplication.utils.TokenUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,11 +27,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void getHah(){
         RetrofitClient.getApi().postToken(TokenUtils.getMapAllDevInfo())
-                .observeOn(Schedulers.io()).map(new Func1<BaseResponse<TokenBean>, TokenBean>() {
-            @Override
-            public TokenBean call(BaseResponse<TokenBean> tokenBeanBaseResponse) {
-                return tokenBeanBaseResponse.getData();
-            }
-        });
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BaseResponse<TokenBean>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(BaseResponse<TokenBean> tokenBeanBaseResponse) {
+                        Log.d("onNext",tokenBeanBaseResponse.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("onError",e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 }

@@ -27,7 +27,7 @@ public class TokenUtils {
         map.put("customerSubName", "first");
         map.put("model", "P2000");
         map.put("manufacturer", "basewin");
-        map.put("version", "");
+        map.put("version", "V3.94.6560");
         map.put("otaAppVersion", "v2.7.0.91");
         map.put("appstoreVersion", "1.9.2");
         map.put("function", "11111");//设备支持功能
